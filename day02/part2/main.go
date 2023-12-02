@@ -2,7 +2,8 @@ package main
 
 import (
 	"bufio"
-	"day02/part1/helpers"
+	helpers1 "day02/part1/helpers"
+	helpers2 "day02/part2/helpers"
 	"fmt"
 	"os"
 )
@@ -17,17 +18,12 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	sum := 0
-	limits := map[string]int{
-		"red":   12,
-		"green": 13,
-		"blue":  14,
-	}
 	for scanner.Scan() {
 		line := scanner.Text()
-		gameSample := helpers.ParseSample(line)
-		if helpers.SupportedBy(gameSample, limits) {
-			sum += gameSample.Id
-		}
+		gameSample := helpers1.ParseSample(line)
+		support := helpers2.FindSupport(gameSample)
+		power := helpers2.Power(support)
+		sum += power
 	}
 	fmt.Println(sum)
 
