@@ -27,3 +27,7 @@ it installing some stuff.
 
 I've always done a lot in the command line. I'm going to avoid that a bit more
 here, and try to use the VSCode UI/tooling instead. So we'll see how that goes.
+Couldn't figure out how to set git user name/email without termainl.
+
+When I added day 2, I had to make a go.work file. There are `go work use`
+commands that I ran in the terminal, which edited the `go.work` file.
