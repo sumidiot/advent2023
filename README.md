@@ -31,3 +31,16 @@ Couldn't figure out how to set git user name/email without termainl.
 
 When I added day 2, I had to make a go.work file. There are `go work use`
 commands that I ran in the terminal, which edited the `go.work` file.
+
+### Frustations
+
+Which is to say, things I don't understand how to do yet...
+
+1. I've got a `helpers.go` file where most of my code goes, and a `main.go` that
+   drives it. I can't figure out how to re-run the last run command I did (based on
+   main.go), without leaving `helpers.go` (and clicking around a few times). Maybe
+   my run configs need some work, or I just need to find the right shortcut (or write
+   more unit tests :)).
+2. I made an infinite loop, and couldn't figure out how to stop the process. Windows
+   noticed VSCode was struggling, and offered to kill it for me. Presumably there's
+   another way.
