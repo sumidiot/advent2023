@@ -43,4 +43,5 @@ Which is to say, things I don't understand how to do yet...
    more unit tests :)).
 2. I made an infinite loop, and couldn't figure out how to stop the process. Windows
    noticed VSCode was struggling, and offered to kill it for me. Presumably there's
-   another way.
+   another way. Ah, there were some debugger buttons at the top of the screen, I just
+   didn't notice them up near the tabs of the editor portion of the windows.

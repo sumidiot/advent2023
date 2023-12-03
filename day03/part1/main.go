@@ -10,6 +10,9 @@ import (
 /**
  * Failed attempts:
  *   544825 - too high
+ *   543348 - too high // thought negative numbers count and get subtracted
+ *   538763 - too low // thought i had an overly generous right-side boundary
+ *   turns out negatives weren't a thing, so it was just my bad indexing
  */
 
 func main() {
