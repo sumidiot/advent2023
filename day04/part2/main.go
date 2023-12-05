@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"day03/part2/helpers"
+	"day04/part2/helpers"
 	"fmt"
 	"os"
 )
