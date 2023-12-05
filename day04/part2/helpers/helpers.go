@@ -1,43 +1,78 @@
 package helpers
 
 import (
-	"day04/part1/helpers"
+	"strconv"
+	"strings"
 )
 
+type Card struct {
+	Id      int
+	Winners []int
+	Mine    []int
+}
+
 func Solve(lines []string) int {
-	copies := make(map[int]int)
-	for _, line := range(lines) {
-		card := helpers.ParseLine(line)
-		getOrIncrement(copies, card.Id, 1)
-		numWin := NumWinners(card)
-		for i := 1; i <= numWin; i++ {
-			getOrIncrement(copies, card.Id + i, copies[card.Id])
+	numCards := make(map[int]int)
+	for _, line := range lines {
+		card := parse(line)
+		ws := cardWinners(card)
+		incrementBy(numCards, card.Id, 1)
+		for i := 0; i < ws; i++ {
+			incrementBy(numCards, card.Id + 1 + i, numCards[card.Id])
 		}
 	}
-	ret := 0
-	for _, v := range(copies) {
-		ret += v
-	}
-	return ret
+	return sum(numCards)
 }
 
-func getOrIncrement(copies map[int]int, id int, v int) {
-	cop, ok := copies[id]
-	if !ok {
-		cop = 0
+func sum(m map[int]int) int {
+	s := 0
+	for _, n := range m {
+		s += n
 	}
-	copies[id] = cop + v
+	return s
 }
 
-func NumWinners(card helpers.Card) int {
-	ret := 0
-	for _, mine := range(card.Mine) {
-		for _, winner := range(card.Winners) {
-			if mine == winner {
-				ret++
-				break
-			}
+func incrementBy(m map[int]int, n int, b int) {
+	if _, ok := m[n]; ok {
+		m[n] += b
+	} else {
+		m[n] = b
+	}
+}
+
+func parse(line string) Card {
+	fields := strings.Fields(line)
+	id, _ := strconv.Atoi(strings.TrimSuffix(fields[1], ":"))
+	w := []int{}
+	m := []int{}
+	idx := 2
+	for ; idx < len(fields) && fields[idx] != "|"; idx++ {
+		n, _ := strconv.Atoi(fields[idx])
+		w = append(w, n)
+	}
+	idx++
+	for ; idx < len(fields); idx++ {
+		n, _ := strconv.Atoi(fields[idx])
+		m = append(m, n)
+	}
+	return Card{id, w, m}
+}
+
+func cardWinners(card Card) int {
+	winners := 0
+	for _, n := range card.Mine {
+		if contains(card.Winners, n) {
+			winners++
 		}
 	}
-	return ret
+	return winners
+}
+
+func contains(arr []int, n int) bool {
+	for _, i := range arr {
+		if i == n {
+			return true
+		}
+	}
+	return false
 }
