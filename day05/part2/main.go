@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+/**
+ * Failed attempts:
+ *   34062605 - too high
+ */
+
 func main() {
 	file, err := os.Open(os.Args[1])
 	if err != nil {
