@@ -44,7 +44,7 @@ func testLines() []string {
 
 func TestParse(t *testing.T) {
 	lines := testLines()
-	sm := parseSeedMaps(lines)
+	sm := ParseSeedMaps(lines)
 	if len(sm.Seeds) != 4 {
 		t.Errorf("Should have 4 seeds, got %v", len(sm.Seeds))
 	}
@@ -73,23 +73,23 @@ func TestParse(t *testing.T) {
 
 func TestTransformOne(t *testing.T) {
 	m := IdMap { 50, 98, 2 }
-	act, exp := transformOne(1, m), 1
+	act, exp := TransformOne(1, m), 1
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformOne(50, m), 50
+	act, exp = TransformOne(50, m), 50
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformOne(98, m), 50
+	act, exp = TransformOne(98, m), 50
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformOne(99, m), 51
+	act, exp = TransformOne(99, m), 51
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformOne(100, m), 100
+	act, exp = TransformOne(100, m), 100
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
@@ -98,35 +98,35 @@ func TestTransformOne(t *testing.T) {
 func TestTransformMany(t *testing.T) {
 	ims := []IdMap { IdMap { 50, 98, 2}, IdMap {52, 50, 48 }}
 	var act, exp int
-	act, exp = transformMany(1, ims), 1
+	act, exp = TransformMany(1, ims), 1
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(48, ims), 48
+	act, exp = TransformMany(48, ims), 48
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(50, ims), 52
+	act, exp = TransformMany(50, ims), 52
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(51, ims), 53
+	act, exp = TransformMany(51, ims), 53
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(97, ims), 99
+	act, exp = TransformMany(97, ims), 99
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(98, ims), 50
+	act, exp = TransformMany(98, ims), 50
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(99, ims), 51
+	act, exp = TransformMany(99, ims), 51
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = transformMany(100, ims), 100
+	act, exp = TransformMany(100, ims), 100
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
@@ -134,27 +134,27 @@ func TestTransformMany(t *testing.T) {
 
 func TestSeedLocation(t *testing.T) {
 	var act, exp int
-	in := parseSeedMaps(testLines())
-	act, exp = in.seedLocation(79), 82
+	in := ParseSeedMaps(testLines())
+	act, exp = in.SeedLocation(79), 82
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = in.seedLocation(14), 43
+	act, exp = in.SeedLocation(14), 43
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = in.seedLocation(55), 86
+	act, exp = in.SeedLocation(55), 86
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
-	act, exp = in.seedLocation(13), 35
+	act, exp = in.SeedLocation(13), 35
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
 }
 func TestSolve(t *testing.T) {
 	var act, exp int
-	act, exp = SolveInput(parseSeedMaps(testLines())), 35
+	act, exp = SolveInput(ParseSeedMaps(testLines())), 35
 	if act != exp {
 		t.Errorf("Expected %v, got %v", exp, act)
 	}
