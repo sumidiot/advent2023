@@ -3,7 +3,6 @@ package helpers
 import (
 	"day08/part1/helpers"
 	"fmt"
-	"log"
 	"math"
 )
 
@@ -24,8 +23,28 @@ func LCMSolve(i *helpers.Inputs) int {
 	for _, sn := range sns {
 		periods = append(periods, FindPeriods(i, sn))
 	}
-	log.Println(fmt.Sprintf("%v", periods))
-	return 0
+	return SolvePeriods(periods, -1, 1)
+}
+
+func minMaybe(a, b int) int {
+	if (a == -1) {
+		return b
+	} else if a < b {
+		return a
+	}
+	return b
+}
+
+func SolvePeriods(periods [][]int, bestKnown int, accum int) int {
+	if len(periods) == 1 {
+		return minMaybe(bestKnown, lcm(accum, periods[0][0]))
+	} else {
+		for _, p := range(periods[0]) {
+			// CoPilot guess here was reasonable but not quite right
+			bestKnown = minMaybe(bestKnown, SolvePeriods(periods[1:], bestKnown, lcm(accum, p)))
+		}
+		return bestKnown
+	}
 }
 
 func FindPeriods(i *helpers.Inputs, startNode string) []int {
@@ -35,20 +54,18 @@ func FindPeriods(i *helpers.Inputs, startNode string) []int {
 	instIdx := 0
 	numSteps := 0
 	for numSteps < stopIdx {
-		// Thanks CoPilot!
 		curNode = helpers.AdvanceNode(i, instIdx, curNode)
 		numSteps++
 		if curNode[len(curNode)-1:] == "Z" {
 			// observation is that the periods for a given node all work out to be multiples of a base period
+			// this is a bit of an assumption, it should a + bn for some a, b more generally,
+			// and in fact it could be that there are several, a_i + b_i n,
+			// but i guess we get lucky. having too many periods leaves more work for later, but shouldn't lead to a wrong answer
 			if len(periods) == 0 || numSteps % periods[len(periods)-1] != 0 {
 				periods = append(periods, numSteps)
 			}
 		}
 		instIdx = (instIdx + 1) % len(i.Instructions)
-	}
-	log.Println(fmt.Sprintf("Periods of %v: %v", startNode, periods))
-	for i := 1; i < len(periods); i++ {
-		log.Println(fmt.Sprintf("Diff: %v", periods[i]-periods[i-1]))
 	}
 	return periods
 }

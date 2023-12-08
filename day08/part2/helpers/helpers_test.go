@@ -18,7 +18,7 @@ import (
 
 func TestPairwiseGCDs(t *testing.T) {
 	num := 281*79*53*59*61*67*47
-	if num != 0 {
+	if num != 13334102464297 {
 		t.Errorf("Expected 0, got %v", num)
 	}
 }
