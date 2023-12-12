@@ -1,5 +1,7 @@
 package helpers
 
+import "fmt"
+
 func Solve(lines []string) int {
 	return SolveInput(ParseLines(lines))
 }
@@ -63,7 +65,7 @@ func (c Coord) Equals(o Coord) bool {
 }
 
 type Inputs struct {
-	Grid [][]GridSpace
+	Grid  [][]GridSpace
 	Start Coord
 }
 
@@ -92,13 +94,13 @@ func FindStartDirectionOptions(i *Inputs) []Dir {
 	if s.Row > 0 && (i.Grid[s.Row-1][s.Col] == Vert || i.Grid[s.Row-1][s.Col] == TopLeft || i.Grid[s.Row-1][s.Col] == TopRight) {
 		ret = append(ret, Up)
 	}
-	if s.Row < len(i.Grid) - 1 && (i.Grid[s.Row+1][s.Col] == Vert || i.Grid[s.Row+1][s.Col] == BotLeft || i.Grid[s.Row+1][s.Col] == BotRight) {
+	if s.Row < len(i.Grid)-1 && (i.Grid[s.Row+1][s.Col] == Vert || i.Grid[s.Row+1][s.Col] == BotLeft || i.Grid[s.Row+1][s.Col] == BotRight) {
 		ret = append(ret, Down)
 	}
 	if s.Col > 0 && (i.Grid[s.Row][s.Col-1] == Horiz || i.Grid[s.Row][s.Col-1] == BotLeft || i.Grid[s.Row][s.Col-1] == TopLeft) {
 		ret = append(ret, Left)
 	}
-	if s.Col < len(i.Grid[0]) - 1 && (i.Grid[s.Row][s.Col+1] == Horiz || i.Grid[s.Row][s.Col+1] == BotRight || i.Grid[s.Row][s.Col+1] == TopRight) {
+	if s.Col < len(i.Grid[0])-1 && (i.Grid[s.Row][s.Col+1] == Horiz || i.Grid[s.Row][s.Col+1] == BotRight || i.Grid[s.Row][s.Col+1] == TopRight) {
 		ret = append(ret, Right)
 	}
 	return ret
@@ -108,78 +110,80 @@ func FindStartSteps(i *Inputs) []Coord {
 	s := i.Start
 	ret := make([]Coord, 0)
 	if s.Row > 0 && (i.Grid[s.Row-1][s.Col] == Vert || i.Grid[s.Row-1][s.Col] == TopLeft || i.Grid[s.Row-1][s.Col] == TopRight) {
-		ret = append(ret, Coord{s.Row-1, s.Col})
+		ret = append(ret, Coord{s.Row - 1, s.Col})
 	}
-	if s.Row < len(i.Grid) - 1 && (i.Grid[s.Row+1][s.Col] == Vert || i.Grid[s.Row+1][s.Col] == BotLeft || i.Grid[s.Row+1][s.Col] == BotRight) {
-		ret = append(ret, Coord{s.Row+1, s.Col})
+	if s.Row < len(i.Grid)-1 && (i.Grid[s.Row+1][s.Col] == Vert || i.Grid[s.Row+1][s.Col] == BotLeft || i.Grid[s.Row+1][s.Col] == BotRight) {
+		ret = append(ret, Coord{s.Row + 1, s.Col})
 	}
 	if s.Col > 0 && (i.Grid[s.Row][s.Col-1] == Horiz || i.Grid[s.Row][s.Col-1] == BotLeft || i.Grid[s.Row][s.Col-1] == TopLeft) {
-		ret = append(ret, Coord{s.Row, s.Col-1})
+		ret = append(ret, Coord{s.Row, s.Col - 1})
 	}
-	if s.Col < len(i.Grid[0]) - 1 && (i.Grid[s.Row][s.Col+1] == Horiz || i.Grid[s.Row][s.Col+1] == BotRight || i.Grid[s.Row][s.Col+1] == TopRight) {
-		ret = append(ret, Coord{s.Row, s.Col+1})
+	if s.Col < len(i.Grid[0])-1 && (i.Grid[s.Row][s.Col+1] == Horiz || i.Grid[s.Row][s.Col+1] == BotRight || i.Grid[s.Row][s.Col+1] == TopRight) {
+		ret = append(ret, Coord{s.Row, s.Col + 1})
 	}
 	return ret
 }
 
 func FindNextCoord(i *Inputs, cur Coord, prev Coord) Coord {
 	switch i.At(cur) {
-	case Empty: panic("empty?")
+	case Empty:
+		panic(fmt.Sprintf("empty %v from %v", cur, prev))
 	case Vert:
 		if prev.Row < cur.Row {
-			return Coord{cur.Row+1, cur.Col}
-		} else if prev.Row > cur.Row{
-			return Coord{cur.Row-1, cur.Col}
+			return Coord{cur.Row + 1, cur.Col}
+		} else if prev.Row > cur.Row {
+			return Coord{cur.Row - 1, cur.Col}
 		} else {
-			panic("vert")
+			panic(fmt.Sprintf("vert %v from %v", cur, prev))
 		}
 	case Horiz:
 		if prev.Col < cur.Col {
-			return Coord{cur.Row, cur.Col+1}
-		} else if prev.Col > cur.Col{
-			return Coord{cur.Row, cur.Col-1}
+			return Coord{cur.Row, cur.Col + 1}
+		} else if prev.Col > cur.Col {
+			return Coord{cur.Row, cur.Col - 1}
 		} else {
-			panic("horiz")
+			panic(fmt.Sprintf("horiz %v from %v", cur, prev))
 		}
 	case TopLeft:
-		if prev.Row == cur.Row && prev.Col == cur.Col + 1 {
-			return Coord{cur.Row+1, cur.Col}
-		} else if prev.Col == cur.Col && prev.Row == cur.Row + 1 {
-			return Coord{cur.Row, cur.Col+1}
+		if prev.Row == cur.Row && prev.Col == cur.Col+1 {
+			return Coord{cur.Row + 1, cur.Col}
+		} else if prev.Col == cur.Col && prev.Row == cur.Row+1 {
+			return Coord{cur.Row, cur.Col + 1}
 		} else {
-			panic("top left")
+			panic(fmt.Sprintf("topleft %v from %v", cur, prev))
 		}
 	case TopRight:
-		if prev.Row == cur.Row && prev.Col == cur.Col - 1 {
-			return Coord{cur.Row+1, cur.Col}
-		} else if prev.Col == cur.Col && prev.Row == cur.Row + 1 {
-			return Coord{cur.Row, cur.Col-1}
+		if prev.Row == cur.Row && prev.Col == cur.Col-1 {
+			return Coord{cur.Row + 1, cur.Col}
+		} else if prev.Col == cur.Col && prev.Row == cur.Row+1 {
+			return Coord{cur.Row, cur.Col - 1}
 		} else {
-			panic("top right")
+			panic(fmt.Sprintf("topright %v from %v", cur, prev))
 		}
 	case BotLeft:
-		if prev.Row == cur.Row && prev.Col == cur.Col + 1 {
-			return Coord{cur.Row-1, cur.Col}
-		} else if prev.Col == cur.Col && prev.Row == cur.Row - 1 {
-			return Coord{cur.Row, cur.Col+1}
+		if prev.Row == cur.Row && prev.Col == cur.Col+1 {
+			return Coord{cur.Row - 1, cur.Col}
+		} else if prev.Col == cur.Col && prev.Row == cur.Row-1 {
+			return Coord{cur.Row, cur.Col + 1}
 		} else {
-			panic("bot left")
+			panic(fmt.Sprintf("botleft %v from %v", cur, prev))
 		}
 	case BotRight:
-		if prev.Row == cur.Row && prev.Col == cur.Col - 1 {
-			return Coord{cur.Row-1, cur.Col}
-		} else if prev.Col == cur.Col && prev.Row == cur.Row - 1 {
-			return Coord{cur.Row, cur.Col-1}
+		if prev.Row == cur.Row && prev.Col == cur.Col-1 {
+			return Coord{cur.Row - 1, cur.Col}
+		} else if prev.Col == cur.Col && prev.Row == cur.Row-1 {
+			return Coord{cur.Row, cur.Col - 1}
 		} else {
-			panic("bot right")
+			panic(fmt.Sprintf("botright %v from %v", cur, prev))
 		}
-	default: panic("panic")
+	default:
+		panic(fmt.Sprintf("unknown %v from %v", cur, prev))
 	}
 }
 
 type Step struct {
 	From Coord
-	To Coord
+	To   Coord
 }
 
 func SolveAssumeTwoStarts(i *Inputs) int {
