@@ -9,6 +9,7 @@ import (
 
 /**
  * Failed attempts:
+ *   * 82000210 too low
  */
 
 func main() {
@@ -26,7 +27,7 @@ func main() {
 		lines = append(lines, line)
 	}
 
-	fmt.Println(helpers.Solve(lines))
+	fmt.Println(helpers.Solve(lines, 1000000))
 
 	if err := scanner.Err(); err != nil {
 		panic(err)

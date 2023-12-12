@@ -1,11 +1,11 @@
 package helpers
 
-func Solve(lines []string) int {
-	return SolveInput(ParseLines(lines))
+func Solve(lines []string, scale int) int {
+	return SolveInput(ParseLines(lines), scale)
 }
 
-func SolveInput(i *BaseInputs) int {
-	return SolveEnriched(Enrich(i))
+func SolveInput(i *BaseInputs, scale int) int {
+	return SolveEnriched(Enrich(i, scale))
 }
 
 func SolveEnriched(i *RichInputs) int {
@@ -18,7 +18,7 @@ func SolveEnriched(i *RichInputs) int {
 	return sum
 }
 
-func minMax(a int, b int) (int, int) {
+func MinMax(a int, b int) (int, int) {
 	if a < b {
 		return a, b
 	}
@@ -26,12 +26,12 @@ func minMax(a int, b int) (int, int) {
 }
 
 func (i *RichInputs) PathLength(lidx int, ridx int) int {
-	minR, maxR := minMax(i.Locs[lidx].Row, i.Locs[ridx].Row)
-	minC, maxC := minMax(i.Locs[lidx].Col, i.Locs[ridx].Col)
+	minR, maxR := MinMax(i.Locs[lidx].Row, i.Locs[ridx].Row)
+	minC, maxC := MinMax(i.Locs[lidx].Col, i.Locs[ridx].Col)
 	rows := 0
 	for row := minR; row < maxR; row++ {
 		if i.RowIsEmpty[row] {
-			rows += 2
+			rows += i.Scale
 		} else {
 			rows++
 		}
@@ -39,7 +39,7 @@ func (i *RichInputs) PathLength(lidx int, ridx int) int {
 	cols := 0
 	for col := minC; col < maxC; col++ {
 		if i.ColIsEmpty[col] {
-			cols += 2
+			cols += i.Scale
 		} else {
 			cols++
 		}
@@ -61,6 +61,7 @@ type RichInputs struct {
 	Locs       []Coord
 	RowIsEmpty map[int]bool
 	ColIsEmpty map[int]bool
+	Scale 	   int
 }
 
 func ParseLines(lines []string) *BaseInputs {
@@ -75,7 +76,7 @@ func ParseLines(lines []string) *BaseInputs {
 }
 
 // CoPilot wrote this, I renamed the 'filled' variable from 'char'
-func Enrich(base *BaseInputs) *RichInputs {
+func Enrich(base *BaseInputs, scale int) *RichInputs {
 	locations := make([]Coord, 0)
 	rowIsEmpty := make(map[int]bool)
 	colIsEmpty := make(map[int]bool)
@@ -98,5 +99,5 @@ func Enrich(base *BaseInputs) *RichInputs {
 			colIsEmpty[col] = true
 		}
 	}
-	return &RichInputs{base, locations, rowIsEmpty, colIsEmpty}
+	return &RichInputs{base, locations, rowIsEmpty, colIsEmpty, scale}
 }

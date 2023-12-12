@@ -20,7 +20,7 @@ func testLines() []string {
 }
 
 func TestPathLength(t *testing.T) {
-	i := Enrich(ParseLines(testLines()))
+	i := Enrich(ParseLines(testLines()), 2)
 	var act, exp int
 	act, exp = i.PathLength(4, 8), 9
 	if act != exp {

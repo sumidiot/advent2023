@@ -26,7 +26,7 @@ func main() {
 		lines = append(lines, line)
 	}
 
-	fmt.Println(helpers.Solve(lines))
+	fmt.Println(helpers.Solve(lines, 2))
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
