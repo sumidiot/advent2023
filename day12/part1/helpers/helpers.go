@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -11,14 +12,76 @@ func Solve(lines []string) int {
 
 func SolveInput(i *Inputs) int {
 	sum := 0
-	for _, row := range *i {
+	for idx, row := range *i {
+		if idx%20 == 0 {
+			fmt.Println(idx)
+		}
 		sum += SolveRow(row)
 	}
 	return sum
 }
 
 func SolveRow(r Row) int {
-	return 0
+	return SolveRowBruteForce(r, 0, 0, make([]SpringState, r.NumUnknown()))
+}
+
+func SolveRowBruteForce(r Row, fromIdx int, subIdx int, subs []SpringState) int {
+	if fromIdx >= len(r.States) {
+		if ValidRow(r, subs) {
+			// fmt.Println(r, subs)
+			return 1
+		}
+		return 0
+	} else if r.States[fromIdx] != Unknown {
+		return SolveRowBruteForce(r, fromIdx+1, subIdx, subs)
+	} else {
+		sum := 0
+		for _, state := range []SpringState{Operational, Damaged} {
+			subs[subIdx] = state
+			sum += SolveRowBruteForce(r, fromIdx+1, subIdx+1, subs)
+		}
+		return sum
+	}
+}
+
+func ValidRow(r Row, subs []SpringState) bool {
+	curContig := 0
+	inBroken := false
+	contigIdx := -1
+	subIdx := 0
+	for _, state := range r.States {
+		if state == Operational || (state == Unknown && subs[subIdx] == Operational) {
+			if inBroken {
+				if contigIdx >= len(r.Contigs) || r.Contigs[contigIdx] != curContig {
+					return false
+				}
+				inBroken = false
+				curContig = 0
+			}
+			if state == Unknown {
+				subIdx++
+			}
+		} else if state == Damaged || (state == Unknown && subs[subIdx] == Damaged) {
+			if !inBroken {
+				contigIdx++
+				if contigIdx >= len(r.Contigs) {
+					return false
+				}
+				curContig = 0
+				inBroken = true
+			}
+			curContig++
+			if state == Unknown {
+				subIdx++
+			}
+		} else {
+			panic("WTH")
+		}
+	}
+	if inBroken && r.Contigs[contigIdx] != curContig {
+		return false
+	}
+	return contigIdx == len(r.Contigs)-1
 }
 
 type SpringState int
@@ -32,6 +95,16 @@ const (
 type Row struct {
 	States  []SpringState
 	Contigs []int
+}
+
+func (r *Row) NumUnknown() int {
+	sum := 0
+	for _, state := range r.States {
+		if state == Unknown {
+			sum++
+		}
+	}
+	return sum
 }
 
 type Inputs []Row
