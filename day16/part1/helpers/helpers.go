@@ -1,10 +1,10 @@
 package helpers
 
 func Solve(lines []string) int {
-	return SolveInput(ParseLines(lines))
+	return SolveInput(ParseLines(lines), Beam{Row: 0, Col: 0, Dir: Right})
 }
 
-func SolveInput(grid [][]Cell) int {
+func SolveInput(grid [][]Cell, beam Beam) int {
 	isEnergized := make(map[int]map[int]bool, 0)
 	traversed := map[Dir]map[int]map[int]bool{
 		Up:    make(map[int]map[int]bool, 0),
@@ -12,7 +12,7 @@ func SolveInput(grid [][]Cell) int {
 		Left:  make(map[int]map[int]bool, 0),
 		Right: make(map[int]map[int]bool, 0),
 	}
-	beams := []Beam{Beam{Row: 0, Col: 0, Dir: Right}}
+	beams := []Beam{beam}
 	MakeTrue(isEnergized, 0, 0)
 	MakeTrue(traversed[Right], 0, 0)
 	for len(beams) > 0 {
